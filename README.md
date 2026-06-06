@@ -62,27 +62,52 @@ analise-dre-ambev/
 
 ##  Etapas do Projeto
 
-### 1. Extração de Dados
-Coleta dos relatórios anuais da AMBEV em formato PDF diretamente do portal da CVM. Desenvolvimento de script em Python com `pdfplumber` para extração, limpeza e padronização dos dados, tratando variações de formatação entre os arquivos de cada ano.
+### Módulo 1 — Extração e Tratamento de Dados (Python)
 
-### 2. Modelagem e Estrutura Analítica
-Construção do modelo dimensional no Power BI seguindo o padrão **Kimball Star Schema**, com três tabelas:
-- `f_LancamentoDRE` — tabela fato com os valores financeiros
-- `d_PlanoContas` — dimensão com a estrutura de contas da DRE
-- `dCalendario` — dimensão de tempo para análises por período
+Coleta dos relatórios anuais da AMBEV em PDF diretamente do portal da CVM. Desenvolvimento de script Python com `pdfplumber` para extração, limpeza e estruturação dos dados — tratando variações de formatação entre arquivos de diferentes anos.
 
-### 3. Definição de Indicadores e Métricas (DAX)
-Desenvolvimento de medidas para os principais KPIs financeiros:
-- **Receita Bruta** e variação anual (AH%)
-- **Margem Bruta** (AV% e evolução)
-- **EBITDA** e percentual sobre receita
-- **Resultado Líquido** e margem líquida
-- Análise Horizontal (AH) e Análise Vertical (AV) para todas as linhas da DRE
+O pipeline executa 8 etapas sequenciais:
 
-### 4. Visualização e Dashboard
-Construção de duas telas complementares:
-- **Tela 1:** KPI cards com sparklines, demonstrativo completo da DRE com AV% e AH%
-- **Tela 2:** Análise de margens por ano, waterfall de resultado, evolução de EBITDA e Resultado Líquido
+| Etapa | O que acontece | Ferramenta |
+|---|---|---|
+| 1. Abertura do PDF | Arquivo carregado em memória | pdfplumber |
+| 2. Seleção de páginas | Apenas páginas 22–24 processadas | pdfplumber |
+| 3. Extração de texto | Texto bruto extraído linha a linha | pdfplumber |
+| 4. Filtragem de linhas | Apenas linhas com código contábil mantidas | re (regex) |
+| 5. Parse das linhas | Código, descrição e valores separados | re (regex) |
+| 6. Limpeza de valores | Formato numérico brasileiro convertido para float | pandas |
+| 7. Formato analítico | Tabela transposta para uma linha por conta/ano | pandas (melt) |
+| 8. Exportação | CSV gerado com encoding utf-8-sig para Excel | pandas |
+
+### Módulo 2 — Modelagem Dimensional (Power BI / Power Query)
+
+Construção do modelo seguindo o padrão **Kimball Star Schema** com três tabelas:
+
+**`d_PlanoContas`** — Dimensão com estrutura hierárquica das contas (N1, N2, N3), classificação sintética/analítica e código contábil. Permite navegação por nível de detalhe e evita dupla contagem ao filtrar apenas contas analíticas na tabela fato.
+
+**`f_LancamentoDRE`** — Tabela fato com os valores financeiros por conta e ano, originada diretamente do CSV gerado pelo script Python. Contém apenas contas analíticas (folhas da hierarquia) para garantir precisão nos cálculos.
+
+**`dCalendario`** — Tabela de tempo calculada em DAX com 6 colunas (Date, Ano, Mês, Mês Número, AnoMes, Trimestre), habilitando inteligência de tempo nativa do Power BI.
+
+> **Decisão crítica de modelagem:** contas sintéticas são totalizadores — incluí-las na tabela fato junto de suas filhas analíticas geraria dupla contagem. Exemplo: somar a conta 3.04.01 (Despesas com Vendas: -R$ 12,6 Mi) com suas filhas resultaria em -R$ 25,3 Mi — quase o dobro do valor real.
+
+### Módulo 3 — Definição de Indicadores e Métricas (DAX)
+
+| Medida | Fórmula DAX | Finalidade |
+|---|---|---|
+| Receita Bruta | `CALCULATE(SUM(f_LancamentoDRE[valor]), d_Planocontas[Cód N1] = "3.01")` | Base de todos os percentuais |
+| % Margem Bruta | `DIVIDE([Resultado Bruto], [Receita Bruta])` | Eficiência após CPV |
+| % EBITDA | `DIVIDE([Ebitda], [Receita Bruta])` | Eficiência operacional |
+| % Lucro | `DIVIDE([Resultado Liquido], [Receita Bruta])` | Margem líquida final |
+| AV | `DIVIDE([DRE FINAL], CALCULATE([DRE FINAL], ALL(d_Planocontas), d_Planocontas[Cód N1] = "3.01"))` | Peso de cada linha sobre a receita |
+| AH | `DIVIDE([DRE FINAL] - [DRE FINAL AA], ABS([DRE FINAL AA]))` | Variação vs. ano anterior |
+| DRE FINAL AA | `CALCULATE([DRE FINAL], SAMEPERIODLASTYEAR(Calendario[Date]))` | Comparativo temporal |
+
+### Módulo 4 — Visualização e Dashboard
+
+**Tela 1 — Visão Executiva:** 4 KPI cards com sparklines cobrindo a cadeia completa de geração de valor (Receita → Margem Bruta → EBITDA → Resultado Líquido), seguidos do demonstrativo completo da DRE com colunas de AV% e AH% para os três anos.
+
+**Tela 2 — Diagnóstico:** Análise de margens por ano, waterfall de formação do resultado, evolução de EBITDA% e Lucro Líquido%, breakdown de despesas operacionais por subcategoria. Filtro de ano interativo.
 
 ### 5. Análise e Insights
 **1. Crescimento de receita com compressão de margens**
