@@ -4,7 +4,7 @@ Projeto de análise financeira completo, cobrindo o fluxo de ponta a ponta: da e
 
 ## Objetivo
 
-Transformar os dados da Demonstração do Resultado do Exercício (DRE) da AMBEV S.A., disponíveis publicamente na CVM, em um painel analítico que permita acompanhar a evolução financeira da companhia entre 2018 e 2020 — com foco em margens, EBITDA e resultado líquido.
+Transformar os dados da Demonstração do Resultado do Exercício (DRE) da AMBEV S.A., disponíveis publicamente na CVM, em um painel analítico que permita acompanhar a evolução financeira da companhia entre 2018 e 2020, com foco em margens, EBITDA e resultado líquido.
 
 ---
 
