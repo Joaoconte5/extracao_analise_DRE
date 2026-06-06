@@ -150,7 +150,7 @@ A queda do EBITDA foi de 3,6 pp entre 2018–2019 e de 4,0 pp entre 2019–2020 
 
 ## Documentação
 
-A documentação técnica completa do projeto está disponível em [`docs/documentacao.pdf`](docs/documentacao.pdf), cobrindo decisões de modelagem, regras de negócio e dicionário de dados.
+A documentação técnica completa do projeto está disponível em [`docs/Doc_DRE_PBI.pdf`](docs/Doc_DRE_PBI.pdf), cobrindo decisões de modelagem, regras de negócio e dicionário de dados.
 
 ---
 
