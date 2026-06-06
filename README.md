@@ -24,16 +24,16 @@ Transformar os dados da Demonstração do Resultado do Exercício (DRE) da AMBEV
 analise-dre-ambev/
 │
 ├── data/
-│   └── raw/                    ← PDFs originais extraídos da CVM
+│   └── raw/                    PDFs originais extraídos da CVM
 │
 ├── notebooks/
-│   └── extracao_dre.ipynb      ← Extração e tratamento dos dados com Python
+│   └── extracao_dre.ipynb      Extração e tratamento dos dados com Python
 │
 ├── powerbi/
-│   └── dashboard_dre.pbix      ← Arquivo Power BI com modelo e dashboard
+│   └── dashboard_dre.pbix      Arquivo Power BI com modelo e dashboard
 │
 ├── docs/
-│   └── documentacao.pdf        ← Documentação técnica completa do projeto
+│   └── documentacao.pdf        Documentação técnica completa do projeto
 │
 ├── images/
 │   ├── dashboard_tela1.png
@@ -60,7 +60,7 @@ analise-dre-ambev/
 ##  Etapas do Projeto
 
 ### 1. Extração de Dados
-Coleta dos relatórios anuais da AMBEV em formato PDF diretamente do portal da CVM. Desenvolvimento de script em Python com `pdfplumber` para extração, limpeza e padronização dos dados — tratando variações de formatação entre os arquivos de cada ano.
+Coleta dos relatórios anuais da AMBEV em formato PDF diretamente do portal da CVM. Desenvolvimento de script em Python com `pdfplumber` para extração, limpeza e padronização dos dados, tratando variações de formatação entre os arquivos de cada ano.
 
 ### 2. Modelagem e Estrutura Analítica
 Construção do modelo dimensional no Power BI seguindo o padrão **Kimball Star Schema**, com três tabelas:
