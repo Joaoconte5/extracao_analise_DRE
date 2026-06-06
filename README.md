@@ -12,9 +12,11 @@ Transformar os dados da Demonstração do Resultado do Exercício (DRE) da AMBEV
 ## Dashboard
 
 ### Tela 1 — Visão Gerencial e Demonstrativo
+**Tela 1 — Visão Executiva:** 4 KPI cards com sparklines cobrindo a cadeia completa de geração de valor (Receita → Margem Bruta → EBITDA → Resultado Líquido), seguidos do demonstrativo completo da DRE com colunas de AV% e AH% para os três anos.
 ![Tela 1 - Análise Gerencial DRE](images/dashboard_tela1.png)
 
 ### Tela 2 — Análise de Margens e Evolução de Resultado
+**Tela 2 — Diagnóstico:** Análise de margens por ano, waterfall de formação do resultado, evolução de EBITDA% e Lucro Líquido%, breakdown de despesas operacionais por subcategoria. Filtro de ano interativo.
 ![Tela 2 - Análise de Margens](images/dashboard_tela2.png)
 
 ---
@@ -83,10 +85,20 @@ Construção de duas telas complementares:
 - **Tela 2:** Análise de margens por ano, waterfall de resultado, evolução de EBITDA e Resultado Líquido
 
 ### 5. Análise e Insights
-- Receita cresceu **40% entre 2018 e 2020** (de R$ 52Mi para R$ 72,85Mi)
-- Margem Bruta apresentou compressão gradual: de **58,3% para 51,1%**
-- EBITDA reduziu de **30,9% para 23,3%**, sinalizando crescimento de custos acima da receita
-- Resultado Líquido manteve crescimento absoluto apesar da compressão de margens
+**1. Crescimento de receita com compressão de margens**
+A receita cresceu 40% entre 2018 e 2020, mas o EBITDA recuou 7,6 pontos percentuais no mesmo período — evidenciando que os custos cresceram proporcionalmente mais rápido que a receita.
+
+**2. CPV como principal driver de compressão**
+O Custo dos Bens Vendidos passou de 41,7% para 48,9% da receita — alta de 7,2 pp em três anos. Com variação AH de -31,8% em 2020 contra crescimento de receita de +24,8%, o CPV é o maior responsável pela queda da Margem Bruta.
+
+**3. Despesas Logísticas crescendo acima da receita**
+As Despesas Logísticas cresceram ~42% enquanto a receita cresceu 25% — um gap de eficiência de 17 pp que representa aproximadamente R$ 6 Mi de despesa adicional acima do proporcional ao crescimento.
+
+**4. Alívio tributário em 2020 mascarou deterioração operacional**
+O Imposto de Renda apresentou AH de +63,9% em 2020 (pagamento proporcionalmente muito menor). Sem esse efeito, o Resultado Líquido teria recuado apesar do crescimento de receita.
+
+**5. Aceleração da deterioração**
+A queda do EBITDA foi de 3,6 pp entre 2018–2019 e de 4,0 pp entre 2019–2020 — sinal de que a deterioração está acelerando, não se estabilizando.
 
 ---
 
@@ -102,11 +114,12 @@ Construção de duas telas complementares:
 ---
 
 ## Aprendizados
-
-- Tratamento de PDFs com estruturas variáveis entre anos — parsing robusto com validação de padrões
-- Modelagem dimensional aplicada a dados financeiros contábeis
-- Construção de análises AV/AH em DAX com contexto de filtro por período
-- Boas práticas de organização de modelo no Power BI para escalabilidade
+- Tratamento de PDFs com estruturas variáveis entre anos — parsing robusto com regex e validação de padrões
+- Decisão de modelagem dimensional: separação de contas sintéticas e analíticas para evitar dupla contagem
+- Construção de AV e AH em DAX com controle de contexto de filtro por período
+- Uso de `SAMEPERIODLASTYEAR` para comparativos temporais corretos
+- Exportação com `utf-8-sig` para compatibilidade com Excel em português
+- Organização de modelo star schema para escalabilidade e performance no Power BI
 
 ---
 
